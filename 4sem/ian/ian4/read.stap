@@ -1,0 +1,3 @@
+probe syscall.read {
+    printf("Process %d (PID %d) called read with file descriptor ???\n", pid(), pid())
+}

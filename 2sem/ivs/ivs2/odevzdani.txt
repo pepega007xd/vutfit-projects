@@ -1,0 +1,3 @@
+Kompletní archiv s repozitářem, instalátory a dokumentací bude odevzdán 26.4.2023 
+v časných ranních hodinách do složky /ivs-proj2/odevzdane/xhumld00 na serveru ivs.fit.vutbr.cz.
+Archiv neobsahuje žádné další soubory, o kterých se zadání nezmiňuje.

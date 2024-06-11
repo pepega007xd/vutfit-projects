@@ -1,0 +1,3 @@
+Run using python: python3 queens.py 8
+
+Tested on Python 3.10 (older versions may not support types)

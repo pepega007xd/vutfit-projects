@@ -1,0 +1,3 @@
+tui new-layout example {-horizontal src 1 regs 1} 2 status 0 cmd 1
+layout example
+tui reg float

@@ -1,0 +1,49 @@
+WHITESPACE = _{ " " | "\n" | "\r" }
+
+number = @{ ASCII_DIGIT* ~ "." ~ ASCII_DIGIT+
+  | ASCII_DIGIT+ ~ "."? }
+
+// This is anything that can be evaluated by itself, no matter 
+// what is around it.
+thing = _{number | "(" ~ subexpr ~ ")" }
+
+
+prefix_op = _{ 
+  minus_sign 
+  | ln_op 
+  | abs_op
+  | sqrt_op
+}
+minus_sign = { "-" }
+ln_op = { "ln" }
+abs_op = { "abs" }
+sqrt_op = { "√" }
+
+postfix_op = _{ factorial_op }
+factorial_op = { "!" }
+
+
+unary_subexpr = _{ prefix_op* ~ thing ~ postfix_op* }
+
+
+infix_op = _{ 
+  addition_op
+  | subtraction_op 
+  | multiplication_op 
+  | division_op 
+  | power_op 
+  | modulo_op
+  | root_op
+}
+addition_op = { "+" }
+subtraction_op = { "-" }
+multiplication_op = { "*" | "×" }
+division_op = { "/" | "÷" }
+power_op = { "^" }
+modulo_op = { "%" }
+root_op = { "√" }
+
+
+subexpr = { unary_subexpr ~ (infix_op ~ unary_subexpr)* }
+
+mathexpr = _{ SOI ~ subexpr ~ EOI }

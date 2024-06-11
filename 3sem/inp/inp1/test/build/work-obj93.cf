@@ -1,0 +1,4 @@
+v 4
+file "/home/tb/projects/inp/inp1/test/" "../src/cpu.vhd" "f575854fac5956841d96cdfe6b00ee39a620d34f" "20231224160903.713":
+  entity cpu at 6( 222) + 0 on 11;
+  architecture behavioral of cpu at 53( 2630) + 0 on 12;

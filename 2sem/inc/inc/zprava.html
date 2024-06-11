@@ -1,0 +1,56 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>zprava.md</title>
+  <link rel="stylesheet" href="https://stackedit.io/style.css" />
+</head>
+
+<body class="stackedit">
+  <div class="stackedit__html"><h1 id="výstupní-zpráva">Výstupní zpráva</h1>
+<p>Jméno: Tomáš Brablec</p>
+<p>Login: xbrabl04</p>
+<h2 id="architektura-navrženého-obvodu">Architektura navrženého obvodu</h2>
+<h3 id="schéma-obvodu">Schéma obvodu</h3>
+<p><img src="block_diagram.png" alt="schéma obvodu"></p>
+<h3 id="popis-funkce">Popis funkce</h3>
+<p>Stavový automat je inicializován do stavu IDLE, ve kterém čeká, dokud není na <code>DIN</code><br>
+logická nula. Poté přechází do stavu START, a spustí <code>COUNTER_8</code> nastavením logické<br>
+jedničky na výstupu <code>CTR_8_EN</code>. Jakmile dosáhne hodnota v čítači osmi (resp. sedmi, protože<br>
+počítá od nuly), signál <code>CTR_8</code> jde do log. 1, a automat přejde do stavu READ. Už při přechodu<br>
+resetuje čítač <code>COUNTER_8</code>, který bude dále využit k počítání přijatých datových bitů. Při<br>
+změně stavu je rovněž spuštěn čítač <code>COUNTER_16</code>, který bude určovat mezery mezi jednotlivými<br>
+datovými bity, přičemž signál <code>CTR_15</code> slouží k zapsání bitu z <code>DIN</code> do posuvného registru<br>
+<code>SHIFT_REG</code>, a signál <code>CTR_16</code> inkrementuje počet přijatých bitů. Jakmile je přijato<br>
+všech 8 datových bitů, signál <code>CTR_8</code> přechází opět do log. 1, a posune FSM do stavu STOP.<br>
+Čítač <code>COUNTER_16</code> napočítá dalších 16 hodinových cyklů, tím se dostane do STOP bitu, načež<br>
+se na jeden hodinový cyklus aktivuje výstup <code>DOUT_VLD</code>, a automat přechází zpět do stavu IDLE.</p>
+<h2 id="návrh-stavového-automatu">Návrh stavového automatu</h2>
+<h3 id="schéma-automatu">Schéma automatu</h3>
+<p>Legenda:</p>
+<ul>
+<li>Stavy automatu: IDLE, START, READ, STOP</li>
+<li>Vstupní signály: DIN, CTR_8, CTR_16</li>
+<li>Mealyho výstupy: CTR_8_EN, CTR_8_RST</li>
+<li>Moorovy výstupy: SHIFT_EN, CTR_16_EN, VLD</li>
+</ul>
+<p><img src="state_machine.png" alt="schéma stavového automatu"></p>
+<h3 id="popis-funkce-1">Popis funkce</h3>
+<p>Automat se po resetování nachází ve stavu IDLE, ve kterém čeká na log. nulu v <code>DIN</code>. Poté<br>
+přechází do stavu START, ve kterém čeká 8 hodinových cyklů. Po osmi cyklech se DIN nachází<br>
+přesně ve středu START bitu. FSM následně přechází do stavu READ, kdy spustí opakující se<br>
+čítač, který každých 16 hodinových cyklů načte jeden bit z <code>DIN</code> do posuvného registru.<br>
+Vzhledem k tomu, že byl 16 stavový čítač spuštěn uprosteřed START bitu, bude hodnota z <code>DIN</code><br>
+samplována přesně ve středu každého datového bitu. Po zaznamenání všech osmi bitů přechází<br>
+automat do stavu STOP, ve kterém čeká dalších 16 cyklů. Po šestnácti cyklech se nachází DIN<br>
+uvnitř STOP bitu (log. 1), takže může automat přejít zpět do stavu IDLE. Ve stavu STOP je<br>
+aktivní výstup <code>VLD</code>, který po operaci AND s výstupem 16 stavového čítače na jeden hodinový cyklus<br>
+aktivuje výstup <code>DOUT_VLD</code>.</p>
+<h2 id="snímek-obrazovky-ze-simulací">Snímek obrazovky ze simulací</h2>
+<p><img src="gtkwave.png" alt="screenshot z GTKWave"></p>
+</div>
+</body>
+
+</html>

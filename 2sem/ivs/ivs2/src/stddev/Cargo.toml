@@ -1,0 +1,13 @@
+[package]
+name = "stddev"
+version = "0.1.0"
+edition = "2021"
+# cargo deb wont run without this for some reason
+authors = ["femboys polska"]
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+mathlib = { path = "../mathlib/" }
+rust_decimal = { version = "1.29.1", features = ["maths"] }
+rust_decimal_macros = "1.29.1"

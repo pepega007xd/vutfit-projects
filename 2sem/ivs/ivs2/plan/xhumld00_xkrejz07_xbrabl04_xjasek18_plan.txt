@@ -1,0 +1,40 @@
+Termíny:
+  - 14. 03. 2023 Vytvoření plánu
+  - 02. 04. 2023 Testy pro matematickou knihovnu
+  - 05. 04. 2023 Makefile
+  - 09. 04. 2023 Matematická knihovna
+  - 11. 04. 2023 Frontend
+  - 13. 04. 2023 Middleware
+  - 14. 04. 2023 Profiling, instalátor
+  - 16. 04. 2023 Dokumentace, mockup další verze, prezentace
+  - 25. 04. 2023 Odevzdání
+
+Rozdělení úkolů
+  - xbrabl04 Tomáš Brablec
+    - Matematická knihovna
+    - Makefile
+    - Instalátor
+    - Backend 
+
+  - xkrejz07 Matyáš Krejza
+    - Návrh UI
+    - Mockup další verze
+    - Frontend
+
+  - xhumld00 Dominik Huml
+    - Profiling
+    - Frontend
+    - Výpomoc ostatním členům týmu
+    - Organizace
+
+  - xjasek18 Matouš Jašek
+    - Příručka
+    - Dokumentace
+    - Testy
+
+Komunikační kanály
+  - Ke komunikaci bude využit soukromý discord server
+Systém pro správu verzí
+  - Git
+  - https://github.com/TheRamsay/ivs-project-2
+  - Uživatel ivskontrola bude přidán pro kontrolu práce vyučujícími

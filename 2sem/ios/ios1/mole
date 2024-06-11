@@ -1,0 +1,411 @@
+#!/bin/sh
+
+# MOLE_RC:
+# realpath_filename:time,group
+#
+# after parsing line from molerc: 
+#   - $filepath is realpath of file
+#   - $date is in format YYYY-MM-DD_HH-mm-ss
+#   - $group
+
+err() {
+    echo "===== ERROR: $1 =====" >&2
+}
+
+debug() {
+    echo "===== DEBUG: $1 =====" >&2
+}
+
+dbg() {
+    echo "mode: $mode"
+    echo "date_min: $date_min"
+    echo "date_max: $date_max"
+    echo "group: $group"
+    if [ "$most_edited" = "1" ] ; then
+        echo "most_edited is set"
+    fi
+    echo "rest of arguments: $@"
+}
+
+usage() {
+    echo 'Usage:
+    mole -h
+        - prints this help
+    mole [-g GROUP] FILE
+        - opens specified file (parameter -g adds this editing instance into GROUP)
+    mole [-m] [FILTERS] [DIRECTORY]
+        - opens the last edited file in specified directory (implicit directory is .)
+        - switch -m opens the most edited file instead
+    mole list [FILTERS] [DIRECTORY]
+        - prints a list of edited files in a directory
+
+    Available filters (each one can be used only once): 
+        -g GROUP1[,GROUP2[,...]]  - specifies groups allowed to pass
+        -a DATE                   - specifies earliest edit date to pass
+        -b DATE                   - specifies latest edit date to pass
+    DATE is in the format YYYY-MM-DD
+    ' >&2
+}
+
+open() {
+    if [ -z "$file" ] ; then
+        err "No file available with given parameters in directory $dir"
+        exit 1
+    fi
+
+    if [ -n "$EDITOR" ] ; then
+        editor="$EDITOR"
+    elif [ -n "$VISUAL" ] ; then
+        editor="$VISUAL"
+    else
+        editor="vi"
+    fi
+
+    "$editor" "$file"
+    exit "$?"
+}
+
+get_date() {
+    echo "$(date +%Y-%m-%d_%H-%M-%S)"
+}
+
+# $1=date
+parse_date() {
+    echo "$1" | cut -d '_' -f 1 | tr -d '-'
+}
+
+# $1=datetime
+parse_time() {
+    echo "$1" | tr -d '_' | tr -d '-'
+}
+
+# after parsing line from molerc: 
+#   - $filepath is realpath of file
+#   - $dates is colon-separated in the form of YYYY-MM-DD_HH-mm-ss
+#   - $groups is comma-separated 
+parse_line() {
+    filepath="$(echo "$line" | cut -d ':' -f1)"
+    _rest="$(echo "$line" | cut -d ':' -f2-)"
+    date="$(echo "$_rest" | cut -d ',' -f1)"
+    group="$(echo "$_rest" | cut -d ',' -f2-)"
+}
+
+# section for opening file
+
+normalfile() {
+    echo "$file:$(get_date),$arg_groups" >> "$molerc"
+    open
+}
+
+# section for filters
+
+dirfilter() {
+    while read line; do
+        parse_line
+        filepath="$(dirname "$filepath")"
+
+        # directory filter
+        if [ "$filepath" = "$dir" ] ; then
+            echo "$line"
+        fi
+    done
+}
+
+gfilter() {
+    while read arg_group; do
+        if [ "$arg_group" = "$group" ]; then
+            return 0
+        fi
+    done
+    return 1
+}
+
+abfilter() {
+    while read line; do
+        parse_line
+        adate="$(parse_date "$adate")"
+        bdate="$(parse_date "$bdate")"
+        date="$(parse_date "$date")"
+        pass="true"
+
+        # adate filter
+        if [ -n "$adate" ] && [ "$date" -le "$adate" ] ; then
+            pass="false"
+        fi
+
+        # bdate filter
+        if [ -n "$bdate" ] && [ "$date" -ge "$bdate" ] ; then
+            pass="false"
+        fi
+
+        if [ "$pass" = "true" ] ; then
+            echo "$line"
+        fi
+    done
+}
+
+filters() {
+    while read line; do
+        parse_line
+        adate="$(parse_date "$adate")"
+        bdate="$(parse_date "$bdate")"
+        date="$(parse_date "$date")"
+        filedir="$(dirname "$filepath")"
+        pass="true"
+
+        # directory filter
+        if [ "$filedir" != "$dir" ] || ! [ -f "$filepath" ]; then
+            pass="false"
+        fi
+
+        # adate filter
+        if [ -n "$adate" ] && [ "$date" -le "$adate" ] ; then
+            pass="false"
+        fi
+
+        # bdate filter
+        if [ -n "$bdate" ] && [ "$date" -ge "$bdate" ] ; then
+            pass="false"
+        fi
+
+        # group filter
+        if [ -n "$arg_groups" ] && ! (echo "$arg_groups" | tr ',' '\n' | gfilter); then
+            pass="false"
+        fi
+
+        if [ "$pass" = "true" ] ; then
+            # debug "passing line: $line"
+            echo "$line"
+        fi
+    done
+}
+
+# section for transformations
+
+filepaths() {
+    while read line; do
+        parse_line
+        echo "$filepath"
+    done
+}
+
+groups_of() {
+    while read line; do
+        parse_line
+        if [ "$filepath" = "$1" ] && [ -n "$group" ] ; then
+            echo "$group"
+        fi
+    done
+}
+
+times_of() {
+    while read line; do
+        parse_line
+        if [ "$filepath" = "$1" ] ; then
+            # debug "returning time $date"
+            echo -n ";$date"
+        fi
+    done
+}
+
+filenames() {
+    while read line; do
+        echo "$(basename "$line")"
+    done
+}
+
+# section for opening directory
+
+lastfile() {
+    last_time="0"
+    last_filepath=""
+
+    while read line; do
+        parse_line
+        time="$(parse_time "$date")"
+
+        if [ "$time" -ge "$last_time" ] ; then
+            last_time="$time"
+            last_filepath="$filepath"
+        fi
+    done
+
+    echo "$last_filepath"
+}
+
+normaldir() {
+    if [ "$most_edited" = "true" ] ; then
+        file="$(cat "$molerc" | filters | filepaths | \
+            sort | uniq -c | sort -r | head -n1 | \
+            xargs | cut -d ' ' -f 2)"
+    else
+        file="$(cat "$molerc" | filters | lastfile)"
+    fi
+
+    if [ -n "$file" ] ; then
+        echo "$file:$(get_date)," >> "$molerc"
+    fi
+    open
+
+}
+
+# section for listing files
+
+list() {
+    lines="$(cat "$molerc" | filters)"
+    filepaths="$(echo "$lines" | filepaths | sort | uniq)"
+    maxlen="$(echo "$filepaths" | filenames | wc -L)"
+
+    echo "$filepaths" | while read filepath; do
+        # debug "filepath: $filepath"
+        filename="$(basename "$filepath")"
+        if [ -z "$filename" ] ; then
+            err "No files to list with given filters"
+            exit 1
+        fi
+
+        groups="$(echo "$lines" | groups_of "$filepath" \
+        | sort | uniq | tr '\n' ',' | rev | cut -c 2- | rev)"
+        # debug "groups: $groups"
+
+        echo -n "$filename:"
+
+        padding="$(($maxlen - ${#filename} + 1))"
+        printf "%${padding}s"
+
+        if [ -z "$groups" ] ; then
+            echo '-'
+        else
+            echo "$groups"
+        fi
+    done
+
+    exit 0
+}
+
+# section for generating log
+
+# $@=directories to log (optional)
+log() {
+    mkdir -p ~/.mole > /dev/null
+
+    if [ -z "$1" ] ; then
+        lines="$(cat "$molerc")"
+    else 
+        for dir in "$@"; do
+            dir="$(realpath "$dir")"
+
+            filtered="$(cat "$molerc" | dirfilter)"
+            if [ -n "$filtered" ] ; then
+                lines="$lines\n$filtered"
+            fi
+        done
+        lines="$(echo "$lines" | tail -n +2)"
+    fi
+
+    lines="$(echo "$lines" | abfilter)"
+    # debug "lines: $lines"
+    filepaths="$(echo "$lines" | filepaths | sort | uniq)"
+    logname=~/.mole/log_"$USER"_"$(get_date)".bz2
+
+    echo "$filepaths" | while read filepath; do
+        echo -n "$filepath" | bzip2 >> "$logname"
+        echo "$lines" | times_of "$filepath" | bzip2 >> "$logname"
+        echo "" | bzip2 >> "$logname"
+    done
+
+    # debug "log: $(bunzip2 -c ~/.mole/"$(ls -t ~/.mole | head -n1)" )"
+    # rm ~/.mole/*
+    exit 0
+}
+
+#
+# execution starts here
+#
+
+export POSIXLY_CORRECT=yes
+
+if ! type "realpath" > /dev/null ; then
+    err "realpath utility is not available"
+    exit 1
+fi
+
+# checking for configuration file path
+if [ -z "$MOLE_RC" ] ; then
+    err "MOLE_RC is not set"
+    exit 1
+else
+    molerc="$(realpath "$MOLE_RC")"
+fi
+
+mkdir -p "$(dirname "$MOLE_RC")" > /dev/null
+touch "$MOLE_RC"
+
+# parsing subcommand
+case "$1" in
+    list)
+        mode=list
+        shift 1
+        ;;
+
+    secret-log)
+        mode=log
+        shift 1
+        ;;
+
+    *)
+        mode=normal
+        ;;
+esac
+
+#parsing arguments
+while getopts ':a:b:g:mh' opt; do
+    case "$opt" in
+        a)
+            adate="$OPTARG"
+            ;;
+        b)
+            bdate="$OPTARG"
+            ;;
+        g)
+            arg_groups="$OPTARG"
+            ;;
+        m)
+            most_edited="true"
+            ;;
+        *)
+            usage
+            exit 1
+            ;;
+    esac
+done
+
+shift "$(($OPTIND-1))"
+
+if [ -z "$1" ] ; then
+    path="$(realpath ".")"
+else
+    path="$(realpath "$1")"
+fi
+
+case "$mode" in
+    normal)
+        if [ -d "$path" ] ; then
+            dir="$path"
+            normaldir
+
+        else
+            file="$path"
+            normalfile
+        fi
+        ;;
+
+    list)
+        dir="$path"
+        list
+        ;;
+
+    log)
+        log "$@"
+        ;;
+esac

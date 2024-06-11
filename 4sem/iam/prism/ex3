@@ -1,0 +1,16 @@
+const double time;
+
+R{"count"}=? [ I = 8 ]
+
+P=? [ F = 4 (s = 10) ]
+
+P=? [ F (s=10) ]
+
+R{"count"}=? [ I = 2 ]
+
+R{"count"}=? [ I = time ]
+
+R{"processed"}=? [ C<=8 ]
+
+R{"count"}=? [ I = time ]
+

@@ -1,0 +1,25 @@
+Problémy při práci na projektu a návrhy na zlepšení:
+
+Za prvé, příště by stálo za to začít v předvečer odevzdání
+o 5 hodin dřív, aby se mohli členové týmu řádně
+vyspat. 
+
+Za druhé, v kanále na discordu by bylo vhodné probírat
+záležitosti projektu, nikoli všeho ostatního.
+
+Za třetí, to že někdo commitne 120MB dat do gitu se stane,
+ale řešit to o 20 commitů později, když už je to dávno v mainu,
+ve 3 ráno před odevzdáním, nebyl dobrý nápad
+(přidal bych do přednášky, jak se toto řeší - bude se hodit)
+
+Za čtvrté, příště by bylo nejspíš vhodnější vybrat jazyk,
+který znají všichni členové týmu. Rust je skvělý jazyk, ale
+přece jen se lépe píše v jazyce, ve kterém už člověk pracuje
+delší dobu.
+
+A konečně za páté, spíše připomínka než problém, náš plán
+práce ve výsledku prakticky nebyl využit, pracovali jsme každý
+vlastním tempem, a myslím že příště bych to tak i napsal
+do plánu. Až na poslední den (noc) jsme stíhali velice 
+dobře.
+

@@ -1,0 +1,4 @@
+xhumld00 103 (koordinace, frontend)
+xbrabl04 103 (backend, makefile, profiling)
+xjasek18 96  (dokumentace, testy)
+xkrejz07 98  (design, mockup)

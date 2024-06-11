@@ -1,0 +1,31 @@
+
+attributes {
+    teplota : nizka stredni vysoka
+    den : pracovni vikend svatek
+    obdobi : jaro leto podzim zima
+    vhkost : mala velka
+}
+
+classes {
+    Nizka
+    Stredni
+    Velka
+}
+
+objects {
+    1 Velka stredni pracovni podzim mala
+    2 Velka vysoka svatek zima velka
+    3 Stredni stredni svatek zima velka
+    4 Stredni stredni pracovni zima velka
+    5 Nizka nizka vikend podzim mala
+    6 Stredni vysoka svatek jaro velka
+    7 Stredni nizka pracovni podzim mala
+    8 Stredni stredni svatek jaro velka
+    9 Stredni stredni vikend jaro velka
+    10 Velka stredni pracovni leto velka
+    11 Velka stredni svatek jaro mala
+    12 Stredni vysoka svatek podzim mala
+    13 Nizka stredni vikend podzim mala
+    14 Nizka vysoka pracovni podzim mala
+    15 Nizka nizka svatek jaro velka
+}

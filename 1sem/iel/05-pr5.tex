@@ -1,0 +1,83 @@
+\section{Příklad 5}
+% Jako parametr zadejte skupinu (A-H)
+\patyZadani{G}
+
+\subsection{Řešení}
+
+Naším úkolem je sestavit a vyřešit diferenciální rovnici popisující přechodový děj sepnutí spínače v 
+obvodu s cívkou a rezistorem. Konkrétně máme získat funkci $i_L(t)$, a poté ověřit její platnost dosazením do původní diferenciální rovnice.
+
+\par
+
+Jako první musíme sestavit diferenciální rovnici popisující zadaný obvod. Vyjdeme z druhého Kirchoffova zákona, který nám říká, že v elementární smyčce je součet napětí všech zdrojů roven součtu napětí všech spotřebičů. To můžeme zapsat jako:
+
+$$ U - u_R - u_L = 0$$
+
+Vzhledem k tomu, že chceme sestavit dif. rovnici pro funkci proudu $i_L$, vyjádříme členy $u_L$ a $u_R$ pomocí proudu $i$ (který je z prvního Kirchoffova zákona v celém obvodu stejný, $i_L = i_R = i$). Člen $u_R$ nahradíme pomocí Ohmova zákona, a člen $u_L$ nahradíme obecně platným popisem závislosti proudu a napětí na cívce ($u_L = L\frac{di}{dt}$)
+
+$$ U - Ri - L\frac{di}{dt} = 0 $$
+
+Tím dostáváme diferenicální rovnici popisující tento obvod. Tuto rovnici převedeme na tvar se separovanými proměnnými:
+
+$$ \frac{U}{L} - i\frac{R}{L} - \frac{di}{dt} = 0 $$
+
+$$ \frac{di}{dt} = \frac{U - Ri}{L} $$
+
+$$ \frac{L\:di}{dt(U - Ri)} = 1 $$
+
+$$ \frac{L}{U - Ri} di = 1 dt $$
+
+Nyní zintegrujeme obě strany rovnice a budeme pokračovat v úpravách:
+
+$$ \int \frac{L}{U - Ri} di = \int 1 dt $$
+
+Provedeme substituci $y = U - Ri$, $di = -\frac{1}{R} dy$
+
+$$ -\frac{L}{R} \int \frac{1}{y} dy = t + C_1 $$
+
+$$ -\frac{L}{R} ln(y) = t + C_1 $$
+
+$$ -\frac{L}{R} ln(U - Ri) = t + C_1 $$
+
+$$ ln(U - Ri) = -\frac{R}{L}t -\frac{R}{L}C_1 $$
+
+$$ U - Ri = e^{-\frac{R}{L}t} e^{-\frac{R}{L}C_1} $$
+
+V tomto bodě si pro zjednodušení dalších výpočtů substituujeme výraz $e^{-\frac{R}{L}C_1}$ obsahující integrační konstantu $C_1$ jinou konstantou $C_2$. Poté z rovnice vyjádříme funkci $i$:
+
+$$ U - Ri = C_2 e^{-\frac{R}{L}t} $$
+
+$$ i = \frac{1}{R} (U - C_2 e^{-\frac{R}{L}t}) $$
+
+Ještě musíme dopočítat konstantu $C_2$ pomocí počáteční podmínky. Použijeme k tomu mezikrok $U - Ri = C_2 e^{-\frac{R}{L}t}$, do kterého dosadíme počáteční podmínku $i(0)$:
+
+$$ U - Ri(0) = C_2 e^{-\frac{R}{L}0} $$
+
+$$ C_2 = U - Ri(0) $$
+
+Tím získáváme obecný tvar analytického řešení diferenciální rovnice:
+
+$$ i(t) = \frac{1}{R} (U - (U - Ri(0)) \: e^{-\frac{R}{L}t}) $$
+
+S hodnotami dosazenými ze zadání dostáváme funkci:
+
+$$ i(t) = \frac{1}{25}(10 - (10 - 25 \cdot 7) \: e^{-\frac{25}{50}t}) $$
+
+$$ i(t) = \frac{1}{5}(2 + 33 e^{-\frac{t}{2}}) $$
+
+Nakonec provedeme zkoušku tím, že dosadíme získanou funkci a její derivaci do původní diferenciální rovnice, a ověříme že daná rovnice platí. K tomu si nejdřív musíme spočítat derivaci funkce $i(t)$:
+
+$$ \frac{d}{dt} (\frac{1}{R} (U - (U - Ri(0)) \: e^{-\frac{R}{L}t})) = \\
+\frac{d}{dt} (\frac{1}{R} \: (U - Ri(0)) \: e^{-\frac{R}{L}t}) = \\
+\frac{1}{L} ((U - Ri(0)) \: e^{-\frac{R}{L}t}) $$
+
+Tu můžeme následně dosadit do diferenciální rovnice spolu s původní funkcí $i(t)$ a upravit:
+
+$$ U - Ri - \frac{di}{dt} = 0 $$
+
+$$ U - R \frac{1}{R} (U - (U - Ri(0)) \: e^{-\frac{R}{L}t}) - L \frac{1}{L} ((U - Ri(0)) \: e^{-\frac{R}{L}t}) = 0$$
+
+$$ U - U + (U - Ri(0)) \: e^{-\frac{R}{L}t} - (U - Ri(0)) \: e^{-\frac{R}{L}t} = 0 $$
+$$ 0 = 0 $$
+
+Čímž jsme ověřili platnost našeho řešení.

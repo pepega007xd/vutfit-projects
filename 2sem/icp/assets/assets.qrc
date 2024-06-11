@@ -1,0 +1,11 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource>
+    <file>air.png</file>
+    <file>default.map</file>
+    <file>ghost.png</file>
+    <file>key.png</file>
+    <file>pacman.png</file>
+    <file>target.png</file>
+    <file>wall.png</file>
+</qresource>
+</RCC>
