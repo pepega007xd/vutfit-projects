@@ -1,0 +1,61 @@
+{
+  "posts": [],
+  "users": [
+    {
+      "user_id": 0,
+      "username": "Tom",
+      "draft": {
+        "name": "",
+        "description": "",
+        "tags": [],
+        "location": "",
+        "image_ids": []
+      }
+    },
+    {
+      "user_id": 1,
+      "username": "Evo",
+      "draft": {
+        "name": "",
+        "description": "",
+        "tags": [],
+        "location": "",
+        "image_ids": []
+      }
+    },
+    {
+      "user_id": 2,
+      "username": "Someone",
+      "draft": {
+        "name": "",
+        "description": "",
+        "tags": [],
+        "location": "",
+        "image_ids": []
+      }
+    },
+    {
+      "user_id": 3,
+      "username": "Nobody",
+      "draft": {
+        "name": "",
+        "description": "",
+        "tags": [],
+        "location": "",
+        "image_ids": []
+      }
+    },
+    {
+      "user_id": 4,
+      "username": "Macicak",
+      "draft": {
+        "name": "",
+        "description": "",
+        "tags": [],
+        "location": "",
+        "image_ids": []
+      }
+    }
+  ],
+  "galleries": []
+}

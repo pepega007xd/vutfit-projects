@@ -1,0 +1,148 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <title>Projekt IIS</title>
+    <style type="text/css">
+        table { border-collapse: collapse; }
+        td, th { border: 1px solid black; padding: 0.3em 0.5em; text-align: left; }
+        dt { font-weight: bold; margin-top: 0.5em; }
+    </style>
+</head>
+<body>
+
+<h1>FITSTAGRAM</h1>
+
+<dl>
+    <dt>Authors</dt>
+    <dd>Tomáš Brablec
+        <a href="mailto:xbrabl04@stud.fit.vutbr.cz">xbrabl04@stud.fit.vutbr.cz</a>
+        <ul>
+            <li>database design</li>
+            <li>authentication (backend)</li>
+            <li>post upload (frontend + backend)</li>
+            <li>post view with comments, rating, editing (frontend + backend)</li>
+            <li>user management (frontend + backend)</li>
+        </ul>
+    </dd>
+    <dd>Jakub Hamadej
+        <a href="mailto:xhamad03@stud.fit.vutbr.cz">xhamad03@stud.fit.vutbr.cz</a>
+        <ul>
+            <li>database design</li>
+            <li>group creation and management</li>
+            <li>group requests (frontend + backend)</li>
+        </ul>
+    </dd>
+        <dd>Abas Hashmy
+        <a href="mailto:xhashm00@stud.fit.vutbr.cz">xhashm00@stud.fit.vutbr.cz</a>
+        <ul>
+            <li>post sharing (frontend + backend)</li>
+            <li>inbox (frontend + backend)</li>
+            <li>authentication (frontend)</li>
+        </ul>
+    </dd>
+    <dt>Deployment URL</dt>
+    <dd>The application is deployed on two servers with identical code and data as a redundancy</dd>
+    <dd><a href="https://fitstagram.kentus.eu/">https://fitstagram.kentus.eu/</a></dd>
+    <dd><a href="https://fitstagram2.kentus.eu/">https://fitstagram2.kentus.eu/</a></dd>
+</dl>
+
+<h2>Users for Testing</h2>
+<table>
+<tr><th>Login</th><th>Heslo</th><th>Role</th></tr>
+<tr><td>administrator</td><td>administrator</td><td>Administrator</td></tr>
+<tr><td>moderator</td><td>moderator</td><td>Moderator</td></tr>
+<tr><td>user</td><td>user</td><td>Logged in user</td></tr>
+<tr><td>--</td><td>--</td><td>Logged out user (guest)</td></tr>
+</table>
+ 
+
+<h3>Video</h3>
+
+<a href="https://youtu.be/2QvEvFQjRW8?si=_1-LWcXd7SasKkgL">Video presentation - 1.5x speed is recommended</a>
+
+<h2>Implementation</h2>
+
+<h3>Database design</h3>
+
+<img src="IIS_ER_diagram.png" alt="ER diagram" width="1000vw">
+
+<h3>Implementation Details</h3>
+
+<i> Note: The application source is located in the <code>app/</code> directory. All backend code is either inlined using Server Actions in frontend code or in the file <code>actions.ts</code></i>
+
+<h4>Authentication</h4>
+<i>Files: login/*</i>
+<p>
+Authentication is done by storing the user ID in the client's cookie. To prevent the user from modifying their cookie, the cookie content is signed as a JSON Web Token (JWT) using a private key stored on the server. The key is stored in a local .env file on the production server.
+</p>
+
+<h4>Home page</h4>
+<i>Files: post/*</i>
+<p>
+Home page shows the user all the posts from users and groups to which they have access. The frontend code that displays a post is in the file <code>post.tsx</code> and it is reused in all places where posts are displayed. The user can sort the posts by age or by rating, and can filter by tags.
+</p>
+
+<h4>New post</h4>
+<i>Files: new_post/*</i>
+<p>
+New post page allows the user to create a post. A post must contain the image itself and a name, and can optionally contain a description, location, and tags.
+</p>
+
+
+<h4>Inbox</h4>
+<i>Files: inbox/*</i>
+<p>
+This page contains posts shared with the current user. It shows who sent us which post, and a link to the post itself.
+</p>
+
+<h4>Groups</h4>
+<i>Files: groups/*, group/*</i>
+<p>
+Contains both group management for group owner, and a list of groups for group member. It is also possible to ask for access to a group.
+</p>
+
+<h4>User management</h4>
+<i>Files: users/*</i>
+<p>
+The page contains a form for adding a new user, and a list of existing users with an option to change user types and delete users. The page is accessible only to administrators.
+</p>
+
+<h4>Banned users</h4>
+<i>Files: actions.ts (backend), post.tsx (frontend)</i>
+<p>
+This page contains a list of banned users with an option to unban them. The page is available only to moderators and administrators.
+</p>
+
+<h2>Installation</h2>
+
+<ul>
+    <li>Install dependencies</li>
+    <ul>
+        <li>Postgres 17</li>
+        <li>Nodejs 20</li>
+        <li>NPM 10</li>
+    </ul>
+    <li>Unpack the archive <code>xbrabl04.zip</code></li>
+    <li>Setup database: 
+    <ul>
+        <li>Start Postgres</li>
+        <li>Create database with name <code>fitstagram</code> and user <code>postgres</code> with password <code>postgres</code> with access to this database</li>
+        <li>Run script <code>db.sql</code> on this database</li>
+    </ul>
+    <li>Build and run application</li>
+    <ul>
+        <li>Install dependencies using <code>npm install</code> (versions are specified in <code>package.json</code>)</li>
+        <li>Build application using <code>npm run build</code></li>
+        <li>Generate a random key and store it into <code>.env</code> file as <code>JWT_SECRET_KEY=<your-key></code></li>
+        <li>Run application using <code>npm run start</code></li>
+    </ul>
+    <li>The application will be available locally on <code>localhost:3000</code></li>
+</ul>
+
+<h2>Known Problems</h2>
+<p>The frontend styling could be improved, but all the functionality required by the assignment is implemented and should be functional.</p>
+
+</body>
+</html>

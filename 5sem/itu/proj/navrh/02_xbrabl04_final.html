@@ -1,0 +1,120 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Welcome file</title>
+  <link rel="stylesheet" href="https://stackedit.io/style.css" />
+</head>
+
+<body class="stackedit">
+  <div class="stackedit__html"><h3 id="basic-info">Basic info</h3>
+<ul>
+<li>App name: Artiscope</li>
+<li>Topic: Image sharing app with advanced organization features</li>
+<li>Tomáš Brablec (xbrabl04) - team leader</li>
+<li>Abas Hashmy (xhashm00)</li>
+</ul>
+<h1 id="overview">Overview</h1>
+<p>The goal is to create a web application for sharing images with advanced search and categorization features.</p>
+<h1 id="project-plan">Project plan</h1>
+<p>The applications will have five main pages between which the user can switch.</p>
+<blockquote>
+<p><strong>Division of work</strong>: Each of the following pages is assigned to a single team member, that is specified after the page name.</p>
+</blockquote>
+<h2 id="home-page-xbrabl04---apppost-apppage.tsx">Home page (xbrabl04) - <code>app/post/*</code>, <code>app/page.tsx</code></h2>
+<p>The Home page will contain a search bar, filter settings, and a list of posts. By default, the page will show a list of latest posts without any filtering. In the actual implementation, all advanced search and filtering options are hidden in a dropdown menu to clean up the user interface.</p>
+<p>Each post will show the author’s username and profile picture, post’s name and description, a few images of the post, number of views and rating, and comments by other users. The post will also contain UI elements for adding a new comment, rating, and for storing the post into a gallery. Storing a post will involve a popup window for selecting the gallery or subgallery to store the post into (this popup is implemented by xhashm00 in <code>app/galleries/addbutton.tsx</code>). Each post can be viewed on a full page (described below).</p>
+<h2 id="create-post-page-xbrabl04---appnew_post">Create post page (xbrabl04) - <code>app/new_post/*</code></h2>
+<p>This page will contain a list of images for the new post and text input for entering metadata. This is preferred over multipage design (where the user first selects images, then clicks “next” to enter the metadata), because the number of fields is not big, and it can be useful to see a preview of the images when entering the other information. In the final application, I decided to hide all optional inputs in a dropdown menu (see more in User testing (xbrabl04)).</p>
+<p>For entering the metadata, there will be textboxes for post name and description, and an empty box for adding a tag. The page will also serve as a draft - when the user closes the page and opens it later, the filled in data will still be present. There will also be a button to discard all data.</p>
+<h2 id="public-galleries-page-xhashm00-apppublic">Public galleries page (xhashm00) <code>app/public/*</code></h2>
+<p>This page contains all public galleries created by all users, it provides all the search options as other gallery pages but it doesn’t allow the user to edit anything on this page. The only use case where editing on this page is possible is when user finds and opens his own gallery among the public ones.</p>
+<h2 id="user-galleries-page-xhashm00-appgalleries-appuser">User galleries page (xhashm00) <code>app/galleries/*</code>, <code>app/user/*</code></h2>
+<p>On this page, the user can create, view, edit, or delete his own galleries comprised of his own or other users’ posts. User-owned galleries can be made private, preventing them from showing on the Public galleries page. Created galleries can also have subgalleries allowing further categorization. Subgalleries cannot be divided any further, this is to prevent users from creating large and difficult to navigate structures, but still providing a tool that allows effective categorization.</p>
+<h2 id="single-post-view-xbrabl04---apppost">Single post view (xbrabl04) - <code>app/post/*</code></h2>
+<p>When opening a post either from galleries or from Home page, the post will be displayed on a full page, along with all its metadata (as described in Home page). If the current user is the author of the post, it will also be possible to edit the post’s metadata (not the images themselves, instead of adding images to existing posts, the user will be encouraged to create a new post and use Galleries for organizing their posts).</p>
+<h1 id="deviation-from-original-plan">Deviation from original plan</h1>
+<h2 id="user-collections-xhashm00">User collections (xhashm00)</h2>
+<p>User collections were redundant since users can just use their galleries for the same purpouse so they weren’t implemented.</p>
+<h2 id="user-galleries-xhashm00">User galleries (xhashm00)</h2>
+<p>Due to lack of time, gallery tags were not implemented.</p>
+<h1 id="user-testing-xbrabl04">User Testing (xbrabl04)</h1>
+<h2 id="the-participant">The Participant</h2>
+<p>The participant is a male college student (age group 20-26). He studies physics, which involves some amount of computer work - mainly data processing in Excel or Python, simulations in specialized software, etc. He is therefore proficient in general use of a computer and has very basic knowledge of software development. The student paints and draws in his free time and posts his work on Instagram.</p>
+<h2 id="tested-tasks">Tested Tasks</h2>
+<p>The participant was not given any additional information than the purpose of the application (which we discussed earlier when researching the User requirements). Then he was given the following tasks without any other hints or instructions:</p>
+<ul>
+<li>Create a post with multiple photos, add a title and post it.</li>
+<li>Find the post and add it to their public gallery (setting up the gallery itself was not a part of the task since galleries are not a part of my work, the point was only to test whether the user can find the button for adding a post to a gallery).</li>
+<li>add a description and a tag to the post.</li>
+<li>Return to main page and sort posts according to views (multiple other posts with more views were added before the test so that the new post wouldn’t be immediately visible).</li>
+<li>Find the new post using the tag.</li>
+<li>Delete the post.</li>
+</ul>
+<p>The user handled the tasks this way:</p>
+<ul>
+<li>
+<p>When creating the post, he immediately found the “New Post” link in navigation and got to the page for creating the post. Then he uploaded images and added a title without a problem, but before creating the post, he asked whether he needs to fill out all the other information. Apparently, it is not obvious whether the fields can be left alone. In the GUI, the “Name” field is annotated with a star, but this is apparently not obvious at first sight. Therefore I decided to hide the other options behind a collapsable menu.</p>
+</li>
+<li>
+<p>Finding the post was simple, the user clicked the “Home” link and saw their own post immediately, since the posts are sorted from newest by default. However, adding the post to a gallery took him some time, according to him it was not obvious that the buttom with a series of images represented a gallery.</p>
+</li>
+<li>
+<p>Adding a description and a tag was easy for the user, after he figured out how to open the post in the “Single post view” using the button in the post header. Again, according to him, it wasn’t clear the button would open the post for editing. It might be better to change the icon to a pencil to signify editing. However, any post can be opened in a single post view, but only the current user’s posts can be edited - fixing this would require a larger redesign of the single post view.</p>
+</li>
+<li>
+<p>Returning to the homepage was confusing to the user - he expected there to be a dedicated “back” button. However, he figured out that he can simply click the browser’s native “back” button to return to homepage. I do not really see a reason to add a dedicated back button in the app, when the app is built for desktop only. The user had no problems finding the extra sort and filter options in the top bar and using it to sort posts.</p>
+</li>
+<li>
+<p>The user first tried to find the post using the search bar (which worked, the search bar also searches through tags), but I told him specifically to look for a tag. After that, he used the tag filter correctly.</p>
+</li>
+<li>
+<p>The user had no problem opening the post again in a single post view and deleting it using the trash button. Apparently, the association between opening a single post and editing it is simple to pick up.</p>
+</li>
+</ul>
+<h2 id="key-takeaways">Key takeaways</h2>
+<p>The first takeaway from the user testing was that icon buttons can be confusing when the user is not familiar with the meaning of the icon beforehand (we used Material Design icons, but when the user never used a Material Design UI, the icons can be confusing). This could be solved by adding text to the buttons themselves or as a hover tooltip.</p>
+<p>The second takeaway is that it is not obvious which fields are required and which are optional in the form for creating a new post. I solved this issue in the final version by hiding the additional (optional) fields in a collapsable menu. This also made the form look less crowded.</p>
+<h1 id="user-testing-xhashm00">User Testing (xhashm00)</h1>
+<h2 id="the-participant-1">The Participant</h2>
+<p>The Participant is a male soldier (age group 25-30). He sometimes works as 2D and 3D designer for which he uses advanced software like Autodesk Maya and similar programs.<br>
+He is therefore proficient in general software handling and also has some experience with programming and experience with working on large scale projects.</p>
+<h2 id="tested-tasks-1">Tested Tasks</h2>
+<p>The participant was not given any additional information than the purpose of the application (which we discussed earlier when researching the User requirements). Then he was given the following tasks without any other hints or instructions:</p>
+<ul>
+<li>Create a gallery and a subgallery and then rename them.</li>
+<li>Find posts you like and add them to your gallery or subgallery. The participant was told where the button to add a post to a gallery was but was not told how it works.</li>
+<li>Look at some publicly displayed galleries.</li>
+<li>Create a new gallery with a subgallery and then delete them.</li>
+<li>Remove a post from your gallery.</li>
+<li>Try to search for something in a gallery.</li>
+<li>Make your gallery private.</li>
+<li>View galleries of a specific user.</li>
+</ul>
+<p>The user handled the tasks this way:</p>
+<ul>
+<li>
+<p>The user had no problem creating a new gallery but he first tried to rename it without opening it and when that didn’t work he realized that he had to open the gallery to rename it. He commented that being able to rename it on the page for all galleries would be more convenient but having to open it first made sense.</p>
+</li>
+<li>
+<p>There was no problem when the user tried to add a post he liked to a gallery or subgallery or when he tried to view public galleries of other users.</p>
+</li>
+<li>
+<p>When the user was asked to delete a subgallery he figured out that he need to open the subgallery to delete it but commented that it might be confusing for some users since they might confuse delete gallery button with delete subgallery button and expressed that there should be a warning before something is deleted.</p>
+</li>
+<li>
+<p>The user had no problem with removing a post from a gallery, with searching for something within a gallery or with making the gallery private.</p>
+</li>
+<li>
+<p>When asked to view galleries of a specific user he intuitively navigated to a post and clicked on the user icon which showed him that users public galleries but commented that it would be nice to also have a similar button in the users gallery itself.</p>
+</li>
+</ul>
+<h2 id="key-takeaways-1">Key takeaways</h2>
+<p>The main takeaway is that users should be warned before something is permanently deleted. For this task a popup that prevents the user from doing anything else and draws their attention to that decision would be a good solution.</p>
+<p>Another takeaway is that there should be a user profile button in their gallery instead of just on their posts so that other users that are viewing the gallery can find the creator.</p>
+</div>
+</body>
+
+</html>
